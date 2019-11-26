@@ -276,8 +276,7 @@ df_airbnb['price'].describe()
 #lets check description of cleaning fee and security group
 df_airbnb.describe()["cleaning_fee"], df_airbnb.describe()["security_deposit"]
 
-# In[64]:
-
+#
 # # boxplot of cleaning_fee column
 boxplot_cleaning_fee = dict(markerfacecolor='r', markeredgecolor='r', marker='.')
 df_airbnb['cleaning_fee'].plot(kind='box', xlim=(0, 1000), vert=False, figsize=(16,2));

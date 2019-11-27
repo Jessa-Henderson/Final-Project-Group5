@@ -8,7 +8,8 @@
 #WE NEED TO REMOVE ONES THAT AREN'T RELEVANT FOR US AT THE END**
 
 import sys
-from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QApplication
+from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QApplication, QGroupBox, QLineEdit, QPushButton, QPlainTextEdit
+from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import pyqtSlot
@@ -23,6 +24,7 @@ import scipy
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from numpy.polynomial.polynomial import polyfit
 from datetime import datetime, timedelta
 from tqdm import tqdm
 
@@ -30,6 +32,9 @@ import warnings
 warnings.filterwarnings("ignore")
 
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.feature_selection import SelectFromModel
+from sklearn.metrics import mean_squared_error, accuracy_score
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import mean_absolute_error as mae
 from sklearn.metrics import r2_score
@@ -189,36 +194,360 @@ class PlotCanvas(FigureCanvas):
 class RandomForest(QMainWindow):
     send_fig = pyqtSignal(str)
 
-    #--------------------------------------------------------
-    # This class if for feature selection with Random Forest
-    # This is set up using the vertical layout option (MAY WANT TO CHANGE TO GRID)
-    #--------------------------------------------------------
-
     def __init__(self):
         #--------------------------------------------------------
         # Initialize the values of the class
         # Here the class inherits all the attributes and methods from the QMainWindow
         #--------------------------------------------------------
         super(RandomForest, self).__init__()
-
         self.Title = 'Feature Selection Using Random Forest'
         self.initUi()
 
     def initUi(self):
-        #::--------------------------------------------------------------
-        #  We create the type of layout QVBoxLayout (Vertical Layout)
-        #  This type of layout comes from QWidget
-        #::--------------------------------------------------------------
-        self.setWindowTitle(self.Title)
-        self.main_widget = QWidget(self)
+        #::-----------------------------------------------------------------
+        #  Create the canvas and all the elements to create a dashboard
+        #::-----------------------------------------------------------------
 
-        self.layout = QVBoxLayout(self.main_widget)
-        self.label1 = QLabel('Random Forest Information Displayed Here')
-        self.layout.addWidget(self.label1)
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+        self.main_widget = QWidget(self)
+        self.layout = QHBoxLayout(self.main_widget)
+
+        self.groupBox1 = QGroupBox('Feature Selection Demo')
+        self.groupBox1Layout = QHBoxLayout()
+        self.groupBox1.setLayout(self.groupBox1Layout)
+
+        self.btnExecute = QPushButton("Execute RF")
+        self.btnExecute.clicked.connect(self.update)
+
+        self.groupBox1Layout.addWidget(self.btnExecute)
+
+        self.layout.addWidget(self.groupBox1)
+
+        #::-------------------------------------------
+        # Graphic 1: Feature Analysis
+        #::-------------------------------------------
+
+        self.fig1 = Figure()
+        self.ax1 = self.fig1.add_subplot(111)
+        self.axes1 = [self.ax1]
+        self.canvas1 = FigureCanvas(self.fig1)
+
+        self.canvas1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas1.updateGeometry()
+
+        self.groupBoxG1 = QGroupBox('Feature Analysis - Top 25')
+        self.groupBoxG1Layout = QHBoxLayout()
+        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
+        self.groupBoxG1Layout.addWidget(self.canvas1)
+
+        #::-------------------------------------------
+        # Graphic 2: Feature Analysis Verification
+        #::-------------------------------------------
+
+        self.fig2 = Figure()
+        self.ax2 = self.fig2.add_subplot(111)
+        self.axes2 = [self.ax2]
+        self.canvas2 = FigureCanvas(self.fig2)
+
+        self.canvas2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas2.updateGeometry()
+
+        self.groupBoxG2 = QGroupBox('Feature Analysis Verification with RF')
+        self.groupBoxG2Layout = QHBoxLayout()
+        self.groupBoxG2.setLayout(self.groupBoxG2Layout)
+        self.groupBoxG2Layout.addWidget(self.canvas2)
+
+        #::-------------------------------------------------
+        # End of graphs
+        #::-------------------------------------------------
+
+        self.layout.addWidget(self.groupBox1)
+        self.layout.addWidget(self.groupBoxG1)
+        self.layout.addWidget(self.groupBoxG2)
 
         self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
 
-    #WILL NEED TO BUILD THIS OUT A LOT MORE FOR RANDOM FOREST - LOOK AT DEMO FOR IDEAS RE:CHANGING PARAMETERS IN FRONT OF CLASS
+    def update(self):
+
+        # processing the parameters
+
+        #vtest_per = float(self.txtPercentTest.text())
+
+        # Clear the graphs to populate them with the new information
+
+        #self.ax1.clear()
+        #self.ax2.clear()
+        #self.ax3.clear()
+        #self.ax4.clear()
+        #self.txtResults.clear()
+        #self.txtResults.setUndoRedoEnabled(False)
+
+        #vtest_per = vtest_per / 100
+        #SHOULD BE ABLE TO DELETE
+
+        # Extract features and labels
+
+        X_dt = AirbnbFeatures.drop('price', axis=1)
+        y_dt = AirbnbFeatures['price']
+
+        # perform training with random forest with all columns
+        # specify random forest Regressor
+        clf = RandomForestRegressor(n_estimators=100)
+
+        # Training and Testing Sets
+        X_train, X_test, y_train, y_test = train_test_split(X_dt, y_dt, test_size=0.2, random_state=0)
+
+        # perform training
+        clf.fit(X_train, y_train)
+
+        #::------------------------------------
+        ##  Graph1 : Feature Analysis
+        #::------------------------------------
+
+        # plot feature importances
+        # get feature importances
+        importances = clf.feature_importances_
+
+        # convert the importances into one-dimensional 1-d array with corresponding df column names as axis labels
+        f_importances = pd.Series(importances, AirbnbFeatures.drop(columns='price').columns)
+
+        # sort the array in descending order of the importances
+        f_importances.sort_values(ascending=False, inplace=True)
+
+        #CAN'T GET THIS TO PLOT CORRECTLY
+        # make the bar Plot from f_importances
+        #X_Features = f_importances.index
+        #y_Importance = f_importances.values
+
+        #f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(16, 9), rot=90, fontsize=15)
+
+        # show the plot
+        #plt.tight_layout()
+        #plt.show()
+
+        #self.ax1.barh(y_Importance, X_Features)
+        self.ax1.barh(f_importances.index[0:25], f_importances.values[0:25])
+        self.ax1.set_aspect('auto')
+
+        # show the plot
+        self.fig1.tight_layout()
+        self.fig1.canvas.draw_idle()
+
+        #::------------------------------------
+        ##  Graph2 : Feature Analysis Verification with Random Forest
+        #::------------------------------------
+
+        # Create a selector object that will use the random forest regressor to identify features
+        sel = SelectFromModel(RandomForestRegressor(n_estimators=100))  # estimators are the number of trees
+        sel.fit(X_train, y_train)
+
+        # In order to check which features among all important we can use the method get_support()
+        sel.get_support()
+
+        # This method will output an array of boolean values.
+        # True for the features whose importance is greater than the mean importance and False for the rest.
+
+        # create list and count features
+        selected_feat = X_train.columns[(sel.get_support())]
+        nlarge = f_importances.nlargest(22)
+
+        self.ax2.barh(nlarge.index, nlarge.values)
+        self.ax2.set_aspect('auto')
+
+        # show the plot
+        self.fig2.tight_layout()
+        self.fig2.canvas.draw_idle()
+
+        # -----------------------------------------------------------------------
+        #DELETE BELOW.....
+        # predicton on test using all features
+        #y_pred = self.clf_rf.predict(X_test)
+        #y_pred_score = self.clf_rf.predict_proba(X_test)
+
+        # confusion matrix for RandomForest
+        #conf_matrix = confusion_matrix(y_test, y_pred)
+
+        # clasification report
+
+        #self.ff_class_rep = classification_report(y_test, y_pred)
+        #self.txtResults.appendPlainText(self.ff_class_rep)
+
+        # accuracy score
+
+        #self.ff_accuracy_score = accuracy_score(y_test, y_pred) * 100
+        #self.txtAccuracy.setText(str(self.ff_accuracy_score))
+
+class RFperformance(QMainWindow):
+    send_fig = pyqtSignal(str)
+
+    def __init__(self):
+        #--------------------------------------------------------
+        # Initialize the values of the class
+        # Here the class inherits all the attributes and methods from the QMainWindow
+        #--------------------------------------------------------
+        super(RFperformance, self).__init__()
+        self.Title = 'Feature Selection Performance'
+        self.initUi()
+
+
+    def initUi(self):
+        #::-----------------------------------------------------------------
+        #  Create the canvas and all the elements to create a dashboard
+        #  The canvas is divided using a  grid layout
+        #::-----------------------------------------------------------------
+
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+        self.main_widget = QWidget(self)
+        self.layout = QVBoxLayout(self.main_widget)
+
+        # Creates the first box
+        self.groupBox1 = QGroupBox('Feature Selection Performance')
+        self.groupBox1Layout = QVBoxLayout()
+        self.groupBox1.setLayout(self.groupBox1Layout)
+
+        self.btnExecute = QPushButton("Execute Performance Check")
+        self.btnExecute.clicked.connect(self.update)
+
+        self.checkbox1 = QCheckBox('Show Regression Line', self)
+        self.checkbox1.stateChanged.connect(self.update)
+
+        self.label1 = QLabel('R^2 value using score:')
+        self.label2 = QLabel('Mean Squared Error:')
+        self.label3 = QLabel('Root Mean Squared Error:')
+
+        # Adds items to the canvas layout
+        self.layout.addWidget(self.groupBox1)
+        self.groupBox1Layout.addWidget(self.btnExecute)
+        self.layout.addWidget(self.checkbox1)
+        self.layout.addWidget(self.label1)
+        self.layout.addWidget(self.label2)
+        self.layout.addWidget(self.label3)
+
+        #::-------------------------------------------
+        # Graphic 1: Feature Analysis
+        #::-------------------------------------------
+
+        self.fig1 = Figure()
+        self.ax1 = self.fig1.add_subplot(111)
+        self.axes1 = [self.ax1]
+        self.canvas1 = FigureCanvas(self.fig1)
+
+        self.canvas1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas1.updateGeometry()
+
+        self.groupBoxG1 = QGroupBox('Residual Plot')
+        self.groupBoxG1Layout = QVBoxLayout()
+        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
+        self.groupBoxG1Layout.addWidget(self.canvas1)
+        self.layout.addWidget(self.groupBoxG1)
+
+        self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
+
+    def update(self):
+        '''
+        Performance Information
+        We populate the dashboard using the parameters chosen by the user
+        The parameters are processed to execute in the skit-learn Random Forest algorithm
+          then the results are presented in graphics and reports in the canvas
+        :return:None
+        '''
+
+        # processing the parameters
+
+        #vtest_per = float(self.txtPercentTest.text())
+
+        # Clear the graphs to populate them with the new information
+
+        #self.ax1.clear()
+        #self.ax2.clear()
+        #self.ax3.clear()
+        #self.ax4.clear()
+        #self.txtResults.clear()
+        #self.txtResults.setUndoRedoEnabled(False)
+
+        #vtest_per = vtest_per / 100
+        #SHOULD BE ABLE TO DELETE
+
+        # Extract features and labels
+
+        X_dt = AirbnbFeatures.drop('price', axis=1)
+        y_dt = AirbnbFeatures['price']
+
+        # perform training with random forest with all columns
+        # specify random forest Regressor
+        clf = RandomForestRegressor(n_estimators=100)
+
+        # Training and Testing Sets
+        X_train, X_test, y_train, y_test = train_test_split(X_dt, y_dt, test_size=0.2, random_state=0)
+
+        # perform training
+        clf.fit(X_train, y_train)
+
+        #This runs the residual plot again based on if the regression line is chosen
+        self.ax1.clear()
+        #cat1 = self.dropdown1.currentText()
+
+        from sklearn.metrics import mean_squared_error, accuracy_score
+        y_pred = clf.predict(X_train)
+
+        # Use the model to predict values
+        y_pred = clf.predict(X_test)
+
+        # Plot of model's residuals:
+        self.ax1.plot(y_test, y_pred, 'bo')
+        self.ax1.set_aspect('auto')
+
+        # show the plot
+        self.fig1.tight_layout()
+        self.fig1.canvas.draw_idle()
+
+        #self.ax1.scatter(X_1, y_1)
+
+        if self.checkbox1.isChecked():
+            b, m = polyfit(y_test, y_pred, 1)
+
+            self.ax1.plot(y_test, b + m * y_test, '-', color="orange")
+
+        vtitle = "Residual Plot "
+        self.ax1.set_title(vtitle)
+        self.ax1.set_xlabel("Price")
+        self.ax1.grid(True)
+
+        self.fig1.tight_layout()
+        self.fig1.canvas.draw_idle()
+
+        self.label1.setText("R^2 value using score fn: %.3f" % clf.score(X_test, y_test))
+        self.label2.setText('Mean Squared Error : %0.3f' % mean_squared_error(y_test,y_pred))
+        self.label3.setText("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_test,y_pred))**0.5)
+
+        #::------------------------------------
+        ##  Graph1 : Feature Analysis
+        #::------------------------------------
+
+
+        # Calculate the Mean Squared Error using the mean_squared_error function.
+        #print("Training Data")
+        #print("R^2 value using score fn: %.3f" % clf.score(X_train, y_train))
+        #print("Mean Squared Error : %0.3f" % mean_squared_error(y_train, y_pred))
+        #print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_train, y_pred)) ** 0.5)
+
+
+        # Calculate the Mean Squared Error using the mean_squared_error function.
+        #print("Test Data")
+        #print("R^2 value using score fn: %.3f" % clf.score(X_test, y_test))
+        #print("Mean Squared Error : %0.3f" % mean_squared_error(y_test, y_pred))
+        #print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_test, y_pred)) ** 0.5)
+
+
 
 #The next class is for model analysis
 class LinearRegression(QMainWindow):
@@ -344,6 +673,11 @@ class MainWIN(QMainWindow):
         FSButton.triggered.connect(self.FS)
         FeatureMenu.addAction(FSButton)
 
+        FS2Button = QAction('Random Forest Performance', self)
+        FS2Button.setStatusTip('Random Forest Performance Analysis')
+        FS2Button.triggered.connect(self.FS2)
+        FeatureMenu.addAction(FS2Button)
+
         # ----------------------------------------
         # Linear Regression Button
         # Creates the Model Analysis Drop Down Menu
@@ -425,9 +759,16 @@ class MainWIN(QMainWindow):
     def FS(self):
         #::----------------------------------------------------------
         # This function creates an instance of the RandomForest class
-        #LEAVE AS IS HERE - DEVELOP RANDOM FOREST MODEL INFO UNDER THE CLASS SECTION - LIKE IN THE DEMO
         #::----------------------------------------------------------
         dialog = RandomForest()
+        self.dialogs.append(dialog)
+        dialog.show()
+
+    def FS2(self):
+        #::----------------------------------------------------------
+        # This function creates an instance of the RFperformance class
+        #::----------------------------------------------------------
+        dialog = RFperformance()
         self.dialogs.append(dialog)
         dialog.show()
 
@@ -468,6 +809,7 @@ def data_airbnb():
     # COMMENTED OUT ARE FROM THE DEMO (unless in all caps) - WE MAY OR MAY NOT NEED ITEMS LIKE THAT BASED ON OUR CODE
     #--------------------------------------------------
     global Florencebnb
+    global AirbnbFeatures
     global FlorenceFINAL
     global df_plot1
     global plot1
@@ -482,6 +824,7 @@ def data_airbnb():
     plot1 = df_plot1.isnull().sum() / Florencebnb.shape[0] * 100
     df_plot2 = Florencebnb.iloc[:, 12:24]
     df_plot3 = Florencebnb.iloc[:, 24:37]
+    AirbnbFeatures = pd.read_csv('airbnb_features.csv')
     #y= Florencebnb["Country"]
     FlorenceFINAL = pd.read_csv('airbnb_cleaned.csv')
     #update feature list & class names

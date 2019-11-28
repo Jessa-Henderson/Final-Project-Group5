@@ -813,8 +813,8 @@ def data_airbnb():
     # Loads airbnb_cleaned.csv (preprocessed dataset)
     # COMMENTED OUT ARE FROM THE DEMO (unless in all caps) - WE MAY OR MAY NOT NEED ITEMS LIKE THAT BASED ON OUR CODE
     #--------------------------------------------------
+    global Florencebnb
     global Florencebnb1
-    global Florencebnb2
     global AirbnbFeatures
     global FlorenceFINAL
     global df_plot1

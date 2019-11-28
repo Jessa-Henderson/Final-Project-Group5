@@ -70,8 +70,12 @@ class PriceDistribution(QMainWindow):
         #--------------------------------------------------------
         super(PriceDistribution, self).__init__()
 
-        self.Title = 'Distribution of Florence Airbnb Prices'
-        self.initUi()
+        self.left = 200
+        self.top = 200
+        self.Title = 'Histogram for Price'
+        self.width = 500
+        self.height = 500
+        self.initUI()
 
     def initUi(self):
         #::--------------------------------------------------------------
@@ -79,18 +83,12 @@ class PriceDistribution(QMainWindow):
         #  This type of layout comes from QWidget
         #::--------------------------------------------------------------
         self.setWindowTitle(self.Title)
-        self.main_widget = QWidget(self)
+        self.setStyleSheet(font_size_window)
 
-        self.layout = QVBoxLayout(self.main_widget)
-        self.label1 = QLabel('This boxplot shows the distribution of Airbnbs in Florence, Italy')
-        self.layout.addWidget(self.label1)
+        self.setGeometry(self.left, self.top, self.width, self.height)
 
-        #self.fig = Figure()
-        #self.ax1 = self.fig.add_subplot()
-        #self.axes = [self.ax1]
-        #self.canvas = FigureCanvas(self.fig)
-
-        self.setCentralWidget(self.main_widget)
+        self.m = PlotCanvas(self, width=5, height=4)
+        self.m.move(0, 30)
 
 
 class MissingData(QMainWindow):
@@ -712,6 +710,13 @@ class MainWIN(QMainWindow):
         #IF WE DO - WE NEED TO ADD UNDER THE CLASS.
         #::---------------------------------------------------------
         dialog = PriceDistribution()
+        dialog.m.plot()
+        dialog.m.ax.hist(u, bins=25, facecolor='green', alpha=0.5)
+        dialog.m.ax.set_title('Price Distribution for Outliers')
+        dialog.m.ax.set_xlabel("Price of Airbnb's")
+        dialog.m.ax.set_ylabel("Count")
+        dialog.m.ax.grid(True)
+        dialog.m.draw()
         self.dialogs.append(dialog)
         dialog.show()
 
@@ -808,16 +813,27 @@ def data_airbnb():
     # Loads airbnb_cleaned.csv (preprocessed dataset)
     # COMMENTED OUT ARE FROM THE DEMO (unless in all caps) - WE MAY OR MAY NOT NEED ITEMS LIKE THAT BASED ON OUR CODE
     #--------------------------------------------------
-    global Florencebnb
+    global Florencebnb1
+    global Florencebnb2
     global AirbnbFeatures
     global FlorenceFINAL
     global df_plot1
     global plot1
     global df_plot2
     global df_plot3
-    #global y
-    #global features_list
+    global u
+    global labels
+    global Top10_amenities
+     #global features_list
     #global class_names
+    
+    # This airbnb_price.csv file has the manipulated price column after removing '$',',' signs
+    # we need to do show that in dat preprocessing code file as we are just using it here for GUI only
+    # This .csv is intermediate cleaned csv file not actual cleaned csv.
+    Florencebnb1 = pd.read_csv('airbnb_price.csv')
+    u = Florencebnb1.loc[:, "price"]
+    
+    
     Florencebnb = pd.read_csv('listings.csv')
     #USE JUST ONE OF THE 3? NEED TO FIX THIS TO GET IT TO RUN PROPERLY IN THE GUI
     df_plot1 = Florencebnb.iloc[:, 0:12]

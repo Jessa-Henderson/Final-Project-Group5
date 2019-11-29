@@ -5,7 +5,6 @@
 # ___________________________________________
 
 # Import Proper Packages
-#WE NEED TO REMOVE ONES THAT AREN'T RELEVANT FOR US AT THE END**
 
 import sys
 from PyQt5.QtWidgets import QMainWindow, QAction, QMenu, QApplication, QGroupBox, QLineEdit, QPushButton, QPlainTextEdit
@@ -39,18 +38,13 @@ from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import mean_absolute_error as mae
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
 
 # --------------------------------
 # Deafault font size for all the windows
-# CAN CHANGE IF WE WANT**
 # --------------------------------
 font_size_window = 'font-size:16px'
-
-#FYI - Each drop down item has a class (here), a button (further below), and a function (below the buttons)
-#This follows the demo and tutorials.
-#FYI - Below the functions you will find global variables, these need to be adjusted as we move forward to be efficient
-#with our code while still pulling in the correct information.
-#DELETE THIS NOTE BEFORE SUBMISSION**
 
 #Setup Classes for Each Drop Down Item
 class PriceDistribution(QMainWindow):
@@ -58,9 +52,6 @@ class PriceDistribution(QMainWindow):
 
     #--------------------------------------------------------
     # This class if for the price distribution as shown via box plot
-    # This is set up using the vertical layout option
-    # DO WE WANT TO MANIPULATE THIS DURING THE PRESENTATION? (DROP OUTLIERS?) IF NOT, WE NEED TO ADD UNDER THE FUNCTION.
-    # IF WE DO - WE NEED TO ADD MORE HERE.
     #--------------------------------------------------------
 
     def __init__(self):
@@ -75,103 +66,22 @@ class PriceDistribution(QMainWindow):
         self.Title = 'Histogram for Price'
         self.width = 500
         self.height = 500
-        self.initUI()
+        self.initUi()
 
     def initUi(self):
-        #::--------------------------------------------------------------
-        #  We create the type of layout QVBoxLayout (Vertical Layout)
-        #  This type of layout comes from QWidget
-        #::--------------------------------------------------------------
         self.setWindowTitle(self.Title)
         self.setStyleSheet(font_size_window)
 
         self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.m = PlotCanvas(self, width=5, height=4)
-        self.m.move(0, 30)
-
-
-class MissingData(QMainWindow):
-    #::----------------------------------
-    # Creates a canvas for the graph of missing data prior to preprocessing
-    # COMPLETE AS IS - PUT GRAPH CODE UNDER THE FUNCTION BELOW
-    #;;----------------------------------
-    def __init__(self, parent=None):
-        super(MissingData, self).__init__(parent)
-
-        self.left = 200
-        self.top = 200
-        self.Title = 'Florence Airbnb Missing Data'
-        self.width = 500
-        self.height = 500
-        self.initUI()
-
-    def initUI(self):
-
-        self.setWindowTitle(self.Title)
-        self.setStyleSheet(font_size_window)
-
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        self.m = PlotCanvas(self, width=5, height=4)
-        self.m.move(0, 30)
-
-class CorrelationPlot(QMainWindow):
-    #::----------------------------------
-    # Creates a canvas for the Correlation Plot
-    # COMPLETE AS IS - PUT GRAPH CODE UNDER THE FUNCTION BELOW
-    #;;----------------------------------
-    def __init__(self, parent=None):
-        super(CorrelationPlot, self).__init__(parent)
-
-        self.left = 200
-        self.top = 200
-        self.Title = 'Florence Airbnb Variable Correlation Plot'
-        self.width = 500
-        self.height = 500
-        self.initUI()
-
-    def initUI(self):
-
-        self.setWindowTitle(self.Title)
-        self.setStyleSheet(font_size_window)
-
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        self.m = PlotCanvas(self, width=5, height=4)
-        self.m.move(0, 30)
-
-class AmenityCount(QMainWindow):
-    #::----------------------------------
-    # Creates a canvas for the graph on the count by Airbnb amenity
-    #COMPLETE AS IS - PUT GRAPH CODE UNDER THE FUNCTION BELOW
-    #;;----------------------------------
-    def __init__(self, parent=None):
-        super(AmenityCount, self).__init__(parent)
-
-        self.left = 200
-        self.top = 200
-        self.Title = 'Florence Airbnb Count by Amenity'
-        self.width = 500
-        self.height = 500
-        self.initUI()
-
-    def initUI(self):
-
-        self.setWindowTitle(self.Title)
-        self.setStyleSheet(font_size_window)
-
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        self.m = PlotCanvas(self, width=5, height=4)
-        self.m.move(0, 30)
+        self.m.move(0,30)
 
 class PlotCanvas(FigureCanvas):
     #::----------------------------------------------------------
     # creates a figure on the canvas
     # later on this element will be used to draw plots/graphs
     # this is used by multiple classes
-    #COMPLETE AS IS
     #::----------------------------------------------------------
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -272,29 +182,12 @@ class RandomForest(QMainWindow):
 
     def update(self):
 
-        # processing the parameters
-
-        #vtest_per = float(self.txtPercentTest.text())
-
-        # Clear the graphs to populate them with the new information
-
-        #self.ax1.clear()
-        #self.ax2.clear()
-        #self.ax3.clear()
-        #self.ax4.clear()
-        #self.txtResults.clear()
-        #self.txtResults.setUndoRedoEnabled(False)
-
-        #vtest_per = vtest_per / 100
-        #SHOULD BE ABLE TO DELETE
-
         # Extract features and labels
-
         X_dt = AirbnbFeatures.drop('price', axis=1)
         y_dt = AirbnbFeatures['price']
 
         # perform training with random forest with all columns
-        # specify random forest Regressor
+        # specify random forest regressor
         clf = RandomForestRegressor(n_estimators=100)
 
         # Training and Testing Sets
@@ -317,18 +210,6 @@ class RandomForest(QMainWindow):
         # sort the array in descending order of the importances
         f_importances.sort_values(ascending=False, inplace=True)
 
-        #CAN'T GET THIS TO PLOT CORRECTLY
-        # make the bar Plot from f_importances
-        #X_Features = f_importances.index
-        #y_Importance = f_importances.values
-
-        #f_importances.plot(x='Features', y='Importance', kind='bar', figsize=(16, 9), rot=90, fontsize=15)
-
-        # show the plot
-        #plt.tight_layout()
-        #plt.show()
-
-        #self.ax1.barh(y_Importance, X_Features)
         self.ax1.barh(f_importances.index[0:25], f_importances.values[0:25])
         self.ax1.set_aspect('auto')
 
@@ -361,25 +242,6 @@ class RandomForest(QMainWindow):
         self.fig2.tight_layout()
         self.fig2.canvas.draw_idle()
 
-        # -----------------------------------------------------------------------
-        #DELETE BELOW.....
-        # predicton on test using all features
-        #y_pred = self.clf_rf.predict(X_test)
-        #y_pred_score = self.clf_rf.predict_proba(X_test)
-
-        # confusion matrix for RandomForest
-        #conf_matrix = confusion_matrix(y_test, y_pred)
-
-        # clasification report
-
-        #self.ff_class_rep = classification_report(y_test, y_pred)
-        #self.txtResults.appendPlainText(self.ff_class_rep)
-
-        # accuracy score
-
-        #self.ff_accuracy_score = accuracy_score(y_test, y_pred) * 100
-        #self.txtAccuracy.setText(str(self.ff_accuracy_score))
-
 class RFperformance(QMainWindow):
     send_fig = pyqtSignal(str)
 
@@ -392,11 +254,9 @@ class RFperformance(QMainWindow):
         self.Title = 'Feature Selection Performance'
         self.initUi()
 
-
     def initUi(self):
         #::-----------------------------------------------------------------
         #  Create the canvas and all the elements to create a dashboard
-        #  The canvas is divided using a  grid layout
         #::-----------------------------------------------------------------
 
         self.setWindowTitle(self.Title)
@@ -404,7 +264,6 @@ class RFperformance(QMainWindow):
         self.main_widget = QWidget(self)
         self.layout = QVBoxLayout(self.main_widget)
 
-        # Creates the first box
         self.groupBox1 = QGroupBox('Feature Selection Performance')
         self.groupBox1Layout = QVBoxLayout()
         self.groupBox1.setLayout(self.groupBox1Layout)
@@ -419,7 +278,6 @@ class RFperformance(QMainWindow):
         self.label2 = QLabel('Mean Squared Error:')
         self.label3 = QLabel('Root Mean Squared Error:')
 
-        # Adds items to the canvas layout
         self.layout.addWidget(self.groupBox1)
         self.groupBox1Layout.addWidget(self.btnExecute)
         self.layout.addWidget(self.checkbox1)
@@ -451,32 +309,8 @@ class RFperformance(QMainWindow):
         self.show()
 
     def update(self):
-        '''
-        Performance Information
-        We populate the dashboard using the parameters chosen by the user
-        The parameters are processed to execute in the skit-learn Random Forest algorithm
-          then the results are presented in graphics and reports in the canvas
-        :return:None
-        '''
-
-        # processing the parameters
-
-        #vtest_per = float(self.txtPercentTest.text())
-
-        # Clear the graphs to populate them with the new information
-
-        #self.ax1.clear()
-        #self.ax2.clear()
-        #self.ax3.clear()
-        #self.ax4.clear()
-        #self.txtResults.clear()
-        #self.txtResults.setUndoRedoEnabled(False)
-
-        #vtest_per = vtest_per / 100
-        #SHOULD BE ABLE TO DELETE
 
         # Extract features and labels
-
         X_dt = AirbnbFeatures.drop('price', axis=1)
         y_dt = AirbnbFeatures['price']
 
@@ -492,7 +326,6 @@ class RFperformance(QMainWindow):
 
         #This runs the residual plot again based on if the regression line is chosen
         self.ax1.clear()
-        #cat1 = self.dropdown1.currentText()
 
         from sklearn.metrics import mean_squared_error, accuracy_score
         y_pred = clf.predict(X_train)
@@ -507,8 +340,6 @@ class RFperformance(QMainWindow):
         # show the plot
         self.fig1.tight_layout()
         self.fig1.canvas.draw_idle()
-
-        #self.ax1.scatter(X_1, y_1)
 
         if self.checkbox1.isChecked():
             b, m = polyfit(y_test, y_pred, 1)
@@ -527,34 +358,10 @@ class RFperformance(QMainWindow):
         self.label2.setText('Mean Squared Error : %0.3f' % mean_squared_error(y_test,y_pred))
         self.label3.setText("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_test,y_pred))**0.5)
 
-        #::------------------------------------
-        ##  Graph1 : Feature Analysis
-        #::------------------------------------
-
-
-        # Calculate the Mean Squared Error using the mean_squared_error function.
-        #print("Training Data")
-        #print("R^2 value using score fn: %.3f" % clf.score(X_train, y_train))
-        #print("Mean Squared Error : %0.3f" % mean_squared_error(y_train, y_pred))
-        #print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_train, y_pred)) ** 0.5)
-
-
-        # Calculate the Mean Squared Error using the mean_squared_error function.
-        #print("Test Data")
-        #print("R^2 value using score fn: %.3f" % clf.score(X_test, y_test))
-        #print("Mean Squared Error : %0.3f" % mean_squared_error(y_test, y_pred))
-        #print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_test, y_pred)) ** 0.5)
-
-
 
 #The next class is for model analysis
 class LinearRegression(QMainWindow):
     send_fig = pyqtSignal(str)
-
-    # --------------------------------------------------------
-    # This class if for Model Analysis with Linear Regression
-    # This is set up using the vertical layout option (MAY WANT TO CHANGE TO GRID)
-    # --------------------------------------------------------
 
     def __init__(self):
         # --------------------------------------------------------
@@ -562,28 +369,167 @@ class LinearRegression(QMainWindow):
         # Here the class inherits all the attributes and methods from the QMainWindow
         # --------------------------------------------------------
         super(LinearRegression, self).__init__()
-
-        self.Title = 'Final Model Analysis'
+        self.Title = 'Linear Regression: Features Predicting Price'
         self.initUi()
 
     def initUi(self):
-        #::--------------------------------------------------------------
-        #  We create the type of layout QVBoxLayout (Vertical Layout)
-        #  This type of layout comes from QWidget
-        #::--------------------------------------------------------------
-        self.setWindowTitle(self.Title)
-        self.main_widget = QWidget(self)
+        #-----------------------------------------------------------------
+        #  Create the canvas and all the elements to create a dashboard
+        #-----------------------------------------------------------------
 
-        self.layout = QVBoxLayout(self.main_widget)
-        self.label1 = QLabel('Linear Regression Information Displayed Here')
-        self.layout.addWidget(self.label1)
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+        self.main_widget = QWidget(self)
+        self.layout = QGridLayout(self.main_widget)
+
+        self.btnExecute = QPushButton("Execute LR")
+        self.btnExecute.clicked.connect(self.update)
+
+        self.groupBox1 = QGroupBox('Linear Regression V1')
+        self.groupBox1Layout = QVBoxLayout()
+        self.groupBox1.setLayout(self.groupBox1Layout)
+
+        self.label1 = QLabel('Coefficients:')
+        self.label2 = QLabel('Mean Squared Error:')
+        self.label3 = QLabel('R2 score / Variance score:')
+
+        self.groupBox2 = QGroupBox('Linear Regression V2')
+        self.groupBox2Layout = QVBoxLayout()
+        self.groupBox2.setLayout(self.groupBox2Layout)
+
+        self.label5 = QLabel('Coefficients:')
+        self.label6 = QLabel('Mean Squared Error:')
+        self.label7 = QLabel('R2 score / Variance score:')
+
+        self.layout.addWidget(self.groupBox1, 0, 0)
+        self.layout.addWidget(self.groupBox2, 0, 1)
+        self.groupBox1Layout.addWidget(self.btnExecute)
+        #self.layout.addWidget(self.label1, 1, 0)
+        self.layout.addWidget(self.label2, 1, 0)
+        self.layout.addWidget(self.label3, 2, 0)
+        #self.layout.addWidget(self.label5, 1, 1)
+        self.layout.addWidget(self.label6, 1, 1)
+        self.layout.addWidget(self.label7, 2, 1)
+
+        #-------------------------------------------
+        # Graphic 1: Linear Regression V1
+        #-------------------------------------------
+
+        self.fig1 = Figure()
+        self.ax1 = self.fig1.add_subplot(111)
+        self.axes1 = [self.ax1]
+        self.canvas1 = FigureCanvas(self.fig1)
+
+        self.canvas1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas1.updateGeometry()
+
+        self.groupBoxG1 = QGroupBox('Linear Regression V1')
+        self.groupBoxG1Layout = QVBoxLayout()
+        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
+        self.groupBoxG1Layout.addWidget(self.canvas1)
+        self.layout.addWidget(self.groupBoxG1)
 
         self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
 
-    # WILL NEED TO BUILD THIS OUT A LOT MORE FOR LR - LOOK AT DEMO FOR IDEAS RE:CHANGING PARAMETERS IN FRONT OF CLASS
+        self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
+
+        #-------------------------------------------
+        # Graphic 2: Linear Regression V2
+        #-------------------------------------------
+
+        self.fig2 = Figure()
+        self.ax2 = self.fig2.add_subplot(111)
+        self.axes2 = [self.ax2]
+        self.canvas2 = FigureCanvas(self.fig2)
+
+        self.canvas2.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas2.updateGeometry()
+
+        self.groupBoxG2 = QGroupBox('Linear Regression V2')
+        self.groupBoxG2Layout = QVBoxLayout()
+        self.groupBoxG2.setLayout(self.groupBoxG2Layout)
+        self.groupBoxG2Layout.addWidget(self.canvas2)
+        self.layout.addWidget(self.groupBoxG2)
+
+        self.setCentralWidget(self.main_widget)
+        self.resize(1100, 700)
+        self.show()
+
+    def update(self):
+
+        # # Linear Regression using features from Correlation Matrix
+        U = coormatrix_features.drop('price', axis=1)
+        V = coormatrix_features['price']
+
+        # split the dataset into train and test
+        U_train, U_test, V_train, V_test = train_test_split(U, V, test_size=0.2, random_state=10)
+
+        # Standardize the features and target / # normalizing the features target
+        ss = StandardScaler()
+        U_train = ss.fit_transform(U_train)
+        U_test = ss.transform(U_test)  # borrowing parameters from train
+        U_train.shape, U_test.shape
+        V_train = ss.fit_transform(V_train.values.reshape(-1, 1))
+        V_test = ss.transform(V_test.values.reshape(-1, 1))
+
+        regr = linear_model.LinearRegression()
+        regr.fit(U_train, V_train)
+        airbnb_V_pred = regr.predict(U_test)
+
+        vtitle = "V1 Prices vs Predicted Prices: $Y_i$ vs $\hat{Y}_i$"
+        self.ax1.plot(V_test, airbnb_V_pred, 'bo')
+        self.ax1.set_title(vtitle)
+        self.ax1.set_xlabel("Prices: $Y_i$")
+        self.ax1.set_ylabel("Predicted prices: $\hat{Y}_i$")
+        self.ax1.grid(True)
+
+        self.fig1.tight_layout()
+        self.fig1.canvas.draw_idle()
+
+        #self.label1.setText('V1 Coefficients: \n' % regr.coef_)
+        self.label2.setText("V1 Mean squared error: %.2f" % mean_squared_error(V_test, airbnb_V_pred))
+        self.label3.setText('V1 R2 score / Variance score: %.2f' % r2_score(V_test, airbnb_V_pred))
+
+        #LR - V2
+        X = FeaturesFINAL.drop('price', axis=1)
+        y = FeaturesFINAL['price']
+
+        # split the dataset into train and test
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
+
+        # Standardize the features and target / # normalizing the features target
+        ss = StandardScaler()
+        X_train = ss.fit_transform(X_train)
+        X_test = ss.transform(X_test)  # borrowing parameters from train
+
+        y_train = ss.fit_transform(y_train.values.reshape(-1, 1))
+        y_test = ss.transform(y_test.values.reshape(-1, 1))
+
+        regr = linear_model.LinearRegression()
+        regr.fit(X_train, y_train)
+        airbnb_y_pred = regr.predict(X_test)
+
+        self.ax2.plot(y_test, airbnb_y_pred, 'bo')
+        self.ax2.set_title("V2 Prices vs Predicted Prices: $Y_i$ vs $\hat{Y}_i$")
+        self.ax2.set_xlabel("Prices: $Y_i$")
+        self.ax2.set_ylabel("Predicted prices: $\hat{Y}_i$")
+        self.ax2.grid(True)
+
+        self.fig2.tight_layout()
+        self.fig2.canvas.draw_idle()
+
+        #self.label5.setText('V2 Coefficients: \n' % regr.coef_)
+        self.label6.setText("V2 Mean squared error: %.2f" % mean_squared_error(y_test, airbnb_y_pred))
+        self.label7.setText('V2 R2 score / Variance score: %.2f' % r2_score(y_test, airbnb_y_pred))
+
 
 # Setup Main Application
-#THIS IS COMPLETE (Unless we want to restyle!)**
 class MainWIN(QMainWindow):
 
     def __init__(self):
@@ -632,11 +578,7 @@ class MainWIN(QMainWindow):
         # ----------------------------------------
         # EDA Buttons
         # Creates the EDA Analysis Menu
-        # Price Distribution: Shows the distribution of rental price using a boxplot
-        # Missing Data: Shows the amount of data that was missing in the initial dataset
-        # Correlation Plot: Correlation plot of Florence Airbnb variables
-        # Correlation Bar Graph: Shows the correlation between each individual feature and price
-        #ALL BUTTONS ARE COMPLETE!
+        # Price Distribution: Shows the distribution of rental price
         #::----------------------------------------
 
         EDA1Button = QAction('Price Distribution', self)
@@ -644,26 +586,10 @@ class MainWIN(QMainWindow):
         EDA1Button.triggered.connect(self.EDA1)
         EDAMenu.addAction(EDA1Button)
 
-        EDA2Button = QAction('Missing Data', self)
-        EDA2Button.setStatusTip('Missing Data in Initial Dataset')
-        EDA2Button.triggered.connect(self.EDA2)
-        EDAMenu.addAction(EDA2Button)
-
-        EDA3Button = QAction('Correlation Plot', self)
-        EDA3Button.setStatusTip('Features Correlation Plot')
-        EDA3Button.triggered.connect(self.EDA3)
-        EDAMenu.addAction(EDA3Button)
-
-        EDA4Button = QAction('Amenity Count', self)
-        EDA4Button.setStatusTip('Bar Graph of Amenity Count')
-        EDA4Button.triggered.connect(self.EDA4)
-        EDAMenu.addAction(EDA4Button)
-
         # ----------------------------------------
         # Feature Selection Button
         # Creates the Feature Selection Drop Down Menu
         # Random Forest: Random Forest was used to determine the best features for the final model.
-        # BUTTON IS COMPLETE
         #::----------------------------------------
 
         FSButton = QAction('Random Forest', self)
@@ -680,7 +606,6 @@ class MainWIN(QMainWindow):
         # Linear Regression Button
         # Creates the Model Analysis Drop Down Menu
         # Linear Regression: Linear Regression was used to investigate how Airbnb features contribute to price
-        # BUTTON IS COMPLETE
         #::----------------------------------------
 
         LRButton = QAction('Linear Regression', self)
@@ -697,61 +622,21 @@ class MainWIN(QMainWindow):
     # EDA Functions
     # Creates the actions for the EDA Analysis Menu
     # EDA1: Amenity Counts
-    # EDA2: Price Distribution
-    # EDA3: Correlation Plot
-    # EDA4: Correlation Bar Grap
     #::----------------------------------------
 
     def EDA1(self):
         #::---------------------------------------------------------
         # This function creates an instance of PriceDistribution class
         # This class creates a boxplot that shows price distribution of Florence Airbnbs
-        #DO WE WANT TO MANIPULATE THIS IN CLASS? (DROP OUTLIERS?) IF NOT, WE ADD MODEL HERE like EDA2.
-        #IF WE DO - WE NEED TO ADD UNDER THE CLASS.
         #::---------------------------------------------------------
         dialog = PriceDistribution()
         dialog.m.plot()
-        dialog.m.ax.hist(u, bins=25, facecolor='green', alpha=0.5)
+        dialog.m.ax.hist(u, bins=25, color='green', alpha=0.5)
         dialog.m.ax.set_title('Price Distribution for Outliers')
-        dialog.m.ax.set_xlabel("Price of Airbnb's")
-        dialog.m.ax.set_ylabel("Count")
+        dialog.m.ax.set_xlabel('Price of Airbnbs')
+        dialog.m.ax.set_ylabel('Count')
         dialog.m.ax.grid(True)
         dialog.m.draw()
-        self.dialogs.append(dialog)
-        dialog.show()
-
-    def EDA2(self):
-        #::----------------------------------------------------------
-        # This function creates an instance of the MissingData class
-        #NEED TO FIX - NOT CORRECT PLOT (FIX GLOBAL VARIABLES BELOW? ADD FEATURES TO GLOBAL VARIABLES BELOW?)
-        #::----------------------------------------------------------
-
-        dialog = MissingData()
-        dialog.m.plot()
-        dialog.m.ax.bar(plot1, height=100)
-        dialog.m.ax.set_title('PLOT1 - Features Emptiness', fontsize=18)
-        dialog.m.ax.set_xlabel('Features of Dataset', fontsize=20)
-        dialog.m.ax.set_ylabel('Percent Empty Data / NaN', fontsize=15)
-        dialog.m.ax.grid(True)
-        dialog.m.draw()
-        self.dialogs.append(dialog)
-        dialog.show()
-
-    def EDA3(self):
-        #::----------------------------------------------------------
-        # This function creates an instance of the CorrelationPlot class
-        #NO GRAPH DATA ADDED YET - FOLLOW EDA2 AS EXAMPLE SINCE NOT MANIPULATING PARAMETERS IN FRONT OF CLASS
-        #::----------------------------------------------------------
-        dialog = CorrelationPlot()
-        self.dialogs.append(dialog)
-        dialog.show()
-
-    def EDA4(self):
-        #::----------------------------------------------------------
-        # This function creates an instance of the AmenityCount class
-        #NO GRAPH DATA ADDED YET - FOLLOW EDA2 AS EXAMPLE SINCE NOT MANIPULATING PARAMETERS IN FRONT OF CLASS
-        #::----------------------------------------------------------
-        dialog = AmenityCount()
         self.dialogs.append(dialog)
         dialog.show()
 
@@ -762,17 +647,17 @@ class MainWIN(QMainWindow):
     #::----------------------------------------
 
     def FS(self):
-        #::----------------------------------------------------------
+        #----------------------------------------------------------
         # This function creates an instance of the RandomForest class
-        #::----------------------------------------------------------
+        #----------------------------------------------------------
         dialog = RandomForest()
         self.dialogs.append(dialog)
         dialog.show()
 
     def FS2(self):
-        #::----------------------------------------------------------
+        #----------------------------------------------------------
         # This function creates an instance of the RFperformance class
-        #::----------------------------------------------------------
+        #----------------------------------------------------------
         dialog = RFperformance()
         self.dialogs.append(dialog)
         dialog.show()
@@ -781,13 +666,12 @@ class MainWIN(QMainWindow):
     # Linear Regression Function
     # Creates the actions for the Model Analysis Menu
     # LR: Linear Regression was used as the final model for analysis
-    #::----------------------------------------
+    #----------------------------------------
 
     def LR(self):
-        #::----------------------------------------------------------
+        #----------------------------------------------------------
         # This function creates an instance of the LinearRegression class
-        #LEAVE AS IS HERE - DEVELOP RANDOM FOREST MODEL INFO UNDER THE CLASS SECTION - LIKE IN THE DEMO
-        #::----------------------------------------------------------
+        #----------------------------------------------------------
         dialog = LinearRegression()
         self.dialogs.append(dialog)
         dialog.show()
@@ -807,46 +691,24 @@ def main():
 
 def data_airbnb():
     #--------------------------------------------------
-    # Pulls in data and relevant variables and features.
-    # This is needed for the rest of the GUI to produce the proper output.
-    # Loads listings.csv (original dataset)
-    # Loads airbnb_cleaned.csv (preprocessed dataset)
-    # COMMENTED OUT ARE FROM THE DEMO (unless in all caps) - WE MAY OR MAY NOT NEED ITEMS LIKE THAT BASED ON OUR CODE
+    # Pulls in data and relevant variables and features for the entire GUI.
     #--------------------------------------------------
     global Florencebnb
-    global Florencebnb1
     global AirbnbFeatures
     global FlorenceFINAL
-    global df_plot1
-    global plot1
-    global df_plot2
-    global df_plot3
+    global FeaturesFINAL
     global u
     global labels
     global Top10_amenities
-     #global features_list
-    #global class_names
-    
-    # This airbnb_price.csv file has the manipulated price column after removing '$',',' signs
-    # we need to do show that in dat preprocessing code file as we are just using it here for GUI only
-    # This .csv is intermediate cleaned csv file not actual cleaned csv.
-    Florencebnb1 = pd.read_csv('airbnb_price.csv')
-    u = Florencebnb1.loc[:, "price"]
-    
-    
-    Florencebnb = pd.read_csv('listings.csv')
-    #USE JUST ONE OF THE 3? NEED TO FIX THIS TO GET IT TO RUN PROPERLY IN THE GUI
-    df_plot1 = Florencebnb.iloc[:, 0:12]
-    plot1 = df_plot1.isnull().sum() / Florencebnb.shape[0] * 100
-    df_plot2 = Florencebnb.iloc[:, 12:24]
-    df_plot3 = Florencebnb.iloc[:, 24:37]
+    global coormatrix_features
+    Florencebnb = pd.read_csv('airbnb_price.csv')
     AirbnbFeatures = pd.read_csv('airbnb_features.csv')
-    #y= Florencebnb["Country"]
     FlorenceFINAL = pd.read_csv('airbnb_cleaned.csv')
-    #update feature list & class names
-    #features_list = ["GDP", "GINI", "VoiceandAccountability", "PoliticalStabilityNoViolence",
-         #"GovermentEffectiveness", "RegulatoryQuality", "RuleofLaw", "ControlofCorruption"]
-    #class_names = ['Happy', 'Med.Happy', 'Low.Happy', 'Not.Happy']
+    FeaturesFINAL = pd.read_csv('Regression_features.csv')
+    u = Florencebnb.loc[:, 'price']
+    coormatrix_features = FeaturesFINAL.loc[:, ('accommodates', 'bathrooms', 'bedrooms', 'security_deposit',
+                                        'cleaning_fee', 'guests_included', 'availability_365', 'property_type_Hotel',
+                                        'price')]
 
 if __name__ == '__main__':
     data_airbnb()

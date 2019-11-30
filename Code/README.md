@@ -12,5 +12,5 @@ Due to bigger size of the dataset we are unable to upload dataset file. Thus, we
 
 3) Regression -  This file of code contains the modeling technique Linear Regression that we have applied to check correlation of                          extracted features by analysing performance metrics of the model.
 
-# Order to follow to implement:
+# Order to follow to implement code:
 Data Preprocessing -> Random Forest -> Regression

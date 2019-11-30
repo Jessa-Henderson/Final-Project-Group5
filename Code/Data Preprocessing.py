@@ -104,20 +104,17 @@ print ('='*80 + '\n')
 
 print("Missing value and dtypes of the data")
 missingval_dtypes = pd.concat([df_airbnb.isnull().sum(), df_airbnb.dtypes], axis =1 )
-print(missingval_dtypes.rename(columns={0:'nans',1:'dtypes'}))
+# print(missingval_dtypes.rename(columns={0:'nans',1:'dtypes'}))
+print(missingval_dtypes)
 
-#Plotting missing value graph for visualization of our daaset
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-
+# ------- Plotting missing value graph for visualization of our daaset ---------
 # calculating percentage missing values for each feature using bar graph in matplotlib
-percentage_missing_values = df_airbnb.isnull().sum() / df_airbnb.shape[0]*100
-pmv = percentage_missing_values.plot(kind = 'bar', color='#E35A5C', figsize = (20, 10),)
-pmv.set_xlabel('Features of Dataset', fontsize=15)
-pmv.set_ylabel('Percent Empty Data / NaN', fontsize=15)
-pmv.set_title('Features Emptiness', fontsize=18)
-plt.show(block=True)
+missing_values = df_airbnb.isnull().sum() / df_airbnb.shape[0]*100
+pmv = missing_values.plot(kind = 'bar', color='blue', figsize = (20, 10),)
+pmv.set_xlabel('Features', fontsize=15)
+pmv.set_ylabel('Missing Data', fontsize=15)
+pmv.set_title('Percentage of Missing values', fontsize=20)
+plt.show()
 
 print('From the above Graph it is clear that some of the columns are with more than 30% missing '
       'values then its wise to drop them right away from the dataset as they are of no use.')
@@ -125,7 +122,7 @@ print('From the above Graph it is clear that some of the columns are with more t
 
 
 #Here we are dropping columns with more than 30% missing values.
-missing_30perc_val = df_airbnb.columns[percentage_missing_values > 30]  #taking percentage of_missing_values from above
+missing_30perc_val = df_airbnb.columns[missing_values > 30]  #taking percentage of_missing_values from above
 
 df_airbnb = df_airbnb.drop(missing_30perc_val, axis=1);
 
@@ -141,32 +138,32 @@ df_plot2 = df_airbnb.iloc[:, 12:24]
 df_plot3 = df_airbnb.iloc[:, 24:37]
 
 #SHAPE OF THE THREE SUBSETS
-df_plot1.shape, df_plot2.shape, df_plot3.shape
+print(df_plot1.shape, df_plot2.shape, df_plot3.shape)
 
 #PLOTTING GRAPHS FOR THREE SUBSETS OF ORIGINAL DATASET
 # we have divided dataset in to three for our ease so as to visualize all the columns clearly for analysing missing values
 plot1 = df_plot1.isnull().sum() / df_orig.shape[0]*100
-pl1 = plot1.plot(kind = 'bar', color='#E35A5C', figsize = (20, 10),)
-pl1.set_xlabel('Features of Dataset', fontsize=20)
-pl1.set_ylabel('Percent Empty Data / NaN', fontsize=15)
-pl1.set_title('PLOT1 - Features Emptiness', fontsize=18)
+pl1 = plot1.plot(kind = 'bar', color='green', figsize = (20, 10),)
+pl1.set_xlabel('Features', fontsize=20)
+pl1.set_ylabel('Missing Data', fontsize=15)
+pl1.set_title('PLOT1 - Percentage of Missing Values ', fontsize=18)
 
 plt.show()
 print('#',50*"-")
 
 plot2 = df_plot2.isnull().sum() / df_orig.shape[0]*100
-pl2 = plot2.plot(kind = 'bar', color='#E35A5C', figsize = (20, 10),)
-pl2.set_xlabel('Features of Dataset', fontsize=20)
-pl2.set_ylabel('Percent Empty Data / NaN', fontsize=20)
-pl2.set_title('PLOT2 - Features Emptiness', fontsize=20)
+pl2 = plot2.plot(kind = 'bar', color='orange', figsize = (20, 10),)
+pl2.set_xlabel('Features', fontsize=20)
+pl2.set_ylabel('Missing Data', fontsize=20)
+pl2.set_title('PLOT2 - Percentage of Missing Values', fontsize=20)
 
 plt.show()
 
 plot3 = df_plot3.isnull().sum() / df_orig.shape[0]*100
-pl3 = plot3.plot(kind = 'bar', color='#E35A5C', figsize = (20, 10),)
-pl3.set_xlabel('Features of Dataset', fontsize=20)
-pl3.set_ylabel('Percent Empty Data / NaN', fontsize=15)
-pl3.set_title('PLOT3 - Features Emptiness', fontsize=18)
+pl3 = plot3.plot(kind = 'bar', color='red', figsize = (20, 10),)
+pl3.set_xlabel('Features', fontsize=20)
+pl3.set_ylabel('Missing Data', fontsize=15)
+pl3.set_title('PLOT3 - Percentage of Missing Values', fontsize=18)
 
 plt.show()
 
@@ -179,7 +176,7 @@ print(df_airbnb.shape)
 
 
 
-# CHECKING THE NANS AND DTYPES SIMULATNEOUSLY OF DATAFRAME "df_airbnb"
+# CHECKING THE NANS AND DTYPES SIMULATNEOUSLY IN TABLE FORMAT OF DATAFRAME "df_airbnb"
 print("Initially checking Misiing value and dtypes of the data in table form")
 missingval_dtypes = pd.concat([df_airbnb.isnull().sum(), df_airbnb.dtypes], axis =1 )
 dataset_nans_dtypes = missingval_dtypes.rename(columns={0:'nans',1:'dtypes'})
@@ -227,12 +224,16 @@ plt.show()
 
 # -----Distribution Plot for column 'Price'------
 print ('='*80 + '\n')
+
 print("Mean of the price column:", df_airbnb['price'].mean())
 print("Median value of the price column:", df_airbnb['price'].median())
-plt.hist(df_airbnb['price'],bins=25);
-# here we will also try to plot median and mean verticle line to check the outliers
-plt.vlines(x=df_airbnb['price'].mean(),ymin=0,ymax=2500,colors='Red');
-plt.vlines(x=df_airbnb['price'].median(),ymin=0,ymax=2500,colors='Green');
+print ('='*80 + '\n')
+
+
+# also plotting  median and mean verticle line to check the deviation
+plt.hist(df_airbnb['price'],color='c', bins=25);
+plt.axvline(x=df_airbnb['price'].mean(),linestyle='dashed', linewidth=1, color='r');
+plt.axvline(x=df_airbnb['price'].median(),linestyle='dashed', linewidth=1,color='b' );
 plt.xlabel('price distribution from the mean and median')
 plt.show()
 
@@ -253,14 +254,14 @@ print(df_airbnb.loc[:, "cleaning_fee"].describe())
 print(df_airbnb.loc[:, "security_deposit"].describe())
 
 
-# # boxplot of cleaning_fee column to see outliers for our reference
+# # boxplot of security_deposit column to view the description and outliers
 boxplot_cleaning_fee = dict(markerfacecolor='r', markeredgecolor='r', marker='.')
-df_airbnb['cleaning_fee'].plot(kind='box', xlim=(0, 1000), vert=False, figsize=(16,2));
+df_airbnb['cleaning_fee'].plot(kind='box', xlim=(0, 1000), vert=False, figsize=(18,3));
 plt.show()
 
-# # boxplot of security_deposit column to see outliers for our reference
+# # boxplot of security_deposit column to view the description and outliers
 boxplot_security_deposit = dict(markerfacecolor='r', markeredgecolor='r', marker='.')
-df_airbnb['security_deposit'].plot(kind='box', xlim=(0, 1000), vert=False, figsize=(16,2));
+df_airbnb['security_deposit'].plot(kind='box', xlim=(0, 1000), vert=False, figsize=(18,3));
 plt.show()
 
 print('The box plot distribution and description of the security fee and cleaning fee shows that 75% of all airbnbs has only cleaning upto '
@@ -286,6 +287,8 @@ df_airbnb.isnull().sum()
 
 
 #Extracting year out of the datetime format of the features
+# we have already parsed these columns in datetime format in the beginning for our ease
+# we are just using year out of it
 
 df_airbnb['host_sinceyear'] = df_airbnb.loc[:,'host_since'].dt.year
 
@@ -304,9 +307,9 @@ print ('='*80 + '\n')
 
 ## ========== Handling some more features  ============
 
-# ### 1) host_response_rate is in percentage so we convert it to float ranging between 0.0 < f < 1.0.
-# ### 2) host_is_superhost and instant_bookable converted from boolean to float/integer
-# ### 3) amenities feature is  expanded into dummy variables (considering only top 10 amenities here)
+# 1) host_response_rate is in percentage so we convert it to float ranging between 0.0 < f < 1.0.
+# 2) host_is_superhost and instant_bookable converted from boolean to float/integer
+# 3) amenities feature is  expanded into dummy variables (considering only top 10 amenities here)
 
 
 # coverting response rate to float values for range between 0 to 1 for easier analysis

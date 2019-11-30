@@ -6,5 +6,5 @@ This Foder has 3 implementation files with name as below:
 
 3) Regression -  This file of code contains the modeling technique Linear Regression that we have applied to check correlation of                          extracted features by analysing performance metrics of the model.
 
-#Order to follow to implement:
+# Order to follow to implement:
 Data Preprocessing -> Random Forest -> Regression

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 # ===================== RANDOM FOREST FOR FEATURE SELECTION ==================
 

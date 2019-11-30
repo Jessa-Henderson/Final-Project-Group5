@@ -1,6 +1,6 @@
 README.md
 
-# Link to Dataset:
+# Link to the Dataset:
 https://drive.google.com/drive/folders/1DfX5JZn_gr_Rdpvy4El5gcWEZwJjqHGx?usp=sharing
 
 Due to bigger size of the dataset we are unable to upload dataset file. Thus, we have shared the link of the drive. 

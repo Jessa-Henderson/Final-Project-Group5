@@ -222,17 +222,17 @@ class RandomForest(QMainWindow):
         #::------------------------------------
 
         # Create a selector object that will use the random forest regressor to identify features
-        sel = SelectFromModel(RandomForestRegressor(n_estimators=100))  # estimators are the number of trees
-        sel.fit(X_train, y_train)
+        select_features = SelectFromModel(RandomForestRegressor(n_estimators=100))  # estimators are the number of trees
+        select_features.fit(X_train, y_train)
 
         # In order to check which features among all important we can use the method get_support()
-        sel.get_support()
+        select_features.get_support()
 
         # This method will output an array of boolean values.
         # True for the features whose importance is greater than the mean importance and False for the rest.
 
         # create list and count features
-        selected_feat = X_train.columns[(sel.get_support())]
+        selected_feature = X_train.columns[(select_features.get_support())]
         nlarge = f_importances.nlargest(22)
 
         self.ax2.barh(nlarge.index, nlarge.values)

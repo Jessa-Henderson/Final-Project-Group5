@@ -107,14 +107,14 @@ from sklearn.feature_selection import SelectFromModel
 # In[10]:
 
 # Create a selector object that will use the random forest regressor to identify features
-sel = SelectFromModel(RandomForestRegressor(n_estimators = 100))  # estimators are the number of trees
-sel.fit(X_train, y_train)
+select_features = SelectFromModel(RandomForestRegressor(n_estimators = 100))  # estimators are the number of trees
+select_features.fit(X_train, y_train)
 
 
 # In[11]:
 
 # In order to check which features among all important we can use the method get_support()
-sel.get_support()
+select_features.get_support()
 
 # This method will output an array of boolean values.
 # True for the features whose importance is greater than the mean importance and False for the rest.
@@ -122,16 +122,16 @@ sel.get_support()
 # In[12]:
 
 # create list and count features
-selected_feat= X_train.columns[(sel.get_support())]
+selected_feature= X_train.columns[(select_features.get_support())]
 print("length of important features selected from RandomForestRegressor is:")
-print(len(selected_feat))
+print(len(selected_feature))
 print ('='*80 + '\n')
 
 # In[13]:
 
 # Display the names of the important features
 print("list of selected features are",)
-print(selected_feat)
+print(selected_feature)
 
 # check and plot the distribution of importance.
 f_importances.nlargest(22).plot(kind='barh')

@@ -1,4 +1,4 @@
-To run mywork.py, you will need the following items from the "Code" folder on the main page of the repository:
+To run mywork.py, you will need the following items that are included in this folder:
 
 (a) Airbnblogo.png 
 (b)airbnb_price.csv 

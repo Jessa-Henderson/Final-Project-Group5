@@ -14,3 +14,7 @@ Due to bigger size of the dataset we are unable to upload dataset file. Thus, we
 
 # Order to follow to implement code:
 Data Preprocessing -> Random Forest -> Regression
+
+#GUI Implementation:
+1) Use the file Group5_GUI_Final
+2) Ensure you have the supporting files located in this repository. These files include: (a) Airbnblogo.png (b)

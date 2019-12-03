@@ -1,4 +1,3 @@
-
 # ===================== RANDOM FOREST FOR FEATURE SELECTION ==================
 
 # Importing the required packages
@@ -131,7 +130,7 @@ print ('='*80 + '\n')
 print("list of selected features are",)
 print(selected_feature)
 
-# check and plot the distribution of importance again with top 22 features
+# check and plot the distribution of importance.
 f_importances.nlargest(22).plot(kind='barh')
 plt.show()
 
@@ -157,44 +156,11 @@ print ('='*80 + '\n')
 print(Regression_features.head())
 print ('='*80 + '\n')
 
-# # =========== Performance metrics using Random Forest ============
+
+
+# #  ================ Getting the best features from random forest into csv for Regression ===============
 
 # In[16]:
-
-
-
-from sklearn.metrics import mean_squared_error, accuracy_score
-y_pred = clf.predict(X_train)
-
-# Calculate the Mean Squared Error using the mean_squared_error function.
-print("Training Data")
-print("R^2 value using score fn: %.3f" % clf.score(X_train,y_train))
-print("Mean Squared Error : %0.3f" % mean_squared_error(y_train,y_pred))
-print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_train,y_pred))**0.5)
-
-
-print ('='*80 + '\n')
-
-# Use the model to predict values
-y_pred = clf.predict(X_test)
-
-# Calculate the Mean Squared Error using the mean_squared_error function.
-print("Test Data")
-print("R^2 value using score fn: %.3f" % clf.score(X_test,y_test))
-print("Mean Squared Error : %0.3f" % mean_squared_error(y_test,y_pred))
-print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_test,y_pred))**0.5)
-
-print ('='*80 + '\n')
-
-# Plot of model's residuals:
-fig = plt.figure(figsize=(10,3))
-sns.regplot((y_test),(y_pred))
-plt.title("Residuals for the model")
-plt.show()
-
-# #  ================ Getting the best features from random forest into csv for Modeling using Regression ===============
-
-# In[17]:
 
 for col in Regression_features.columns[Regression_features.isnull().any()]:
     print(col)

@@ -180,7 +180,7 @@ y_pred = clf.predict(X_test)
 
 # Calculate the Mean Squared Error using the mean_squared_error function.
 print("Test Data")
-print("R^2 value using score fn: %.3f" % clf.score(X_test,y_test))
+print("Accuracy Score: %.3f" % clf.score(X_test,y_test))
 print("Mean Squared Error : %0.3f" % mean_squared_error(y_test,y_pred))
 print("Root Mean Squared Error : %0.3f" % (mean_squared_error(y_test,y_pred))**0.5)
 

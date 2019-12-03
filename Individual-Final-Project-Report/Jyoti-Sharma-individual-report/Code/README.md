@@ -7,3 +7,8 @@ This file includes the data preprocessing steps involved in making the dataset r
 
 # mywork2.py 
 This file includes the work that I performed to do feature selection. Algorithmic technique called RandomForestRegressor has been used to make decision on important features that impacts the prices of Airbnbs in Florence, Italy.
+
+# Link to the Dataset:
+https://drive.google.com/drive/folders/1DfX5JZn_gr_Rdpvy4El5gcWEZwJjqHGx?usp=sharing
+
+Due to bigger size of the dataset we are unable to upload dataset file. Thus, we have shared the link of the drive.

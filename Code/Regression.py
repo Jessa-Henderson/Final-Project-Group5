@@ -175,11 +175,11 @@ print('#', 50 * "-")
 # In[16]:
 
 print(
-    'Performance metrics for our kind of social science data with 0.41 R2 value and score 0.40 and MSE: 0.57 can be considered as good')
+    ' Determination Coefficent values for our kind of social science data with 0.41 R2 value and score 0.40 and MSE: 0.57 can be considered as good')
 
 # # --------------Model Comparison-----------------
 
 # In[17]:
 
 print(
-    'If we see the performence metrics from random Forest Regression and Linear Regression, then we can see that Linear model is performing better than tree based model.')
+    'If we see the coefficient of determination from random Forest Regression and Linear Regression, then we can see that Linear model is performing better than tree based model.')

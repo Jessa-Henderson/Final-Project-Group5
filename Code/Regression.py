@@ -175,7 +175,7 @@ print('#', 50 * "-")
 # In[16]:
 
 print(
-    ' Determination Coefficent values for our kind of social science data with 0.41 R2 value and score 0.40 and MSE: 0.57 can be considered as good')
+    ' Determination Coefficent values for our kind of social science data with 0.35 R2 value and score 0.35 and MSE: 0.62 can be considered as good')
 
 
 

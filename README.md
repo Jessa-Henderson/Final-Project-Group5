@@ -11,8 +11,4 @@ Final-Group-Project-Report contains a PDF of the final written report for Group 
 
 Code contains all the .py files and supporting files that are needed to execute the code for this project.
 
-Individual-Final-Report contains individual folders for each group member's reflection on her personal contribution to the overall project. 
-
-PLEASE IGNORE FOR GRADING:
-
-GUI-Draft - as this folder was used internally by the group to track changes in the GUI code as the GUI progressed. 
+Individual-Final-Report contains individual folders for each group member's reflection on her personal contribution to the overall project.  

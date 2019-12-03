@@ -3,7 +3,9 @@ Group 5 Data Mining Final Project
 
 The following folders are for official grading:
 
-Group-Proposal contains the proposed research plan for Group 5. It was submitted in advance of the analysis as indicated by the date and time stamp.
+## Group-Proposal 
+
+contains the proposed research plan for Group 5. It was submitted in advance of the analysis as indicated by the date and time stamp.
 
 Final-Group-Presentation contains the presentation slideshow in a PDF.
 

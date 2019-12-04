@@ -1,4 +1,6 @@
 # # =========================== Data Modeling ==================================
+
+
 # Importing the required packages
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -103,7 +105,7 @@ plt.ylabel("Predicted prices: $\hat{Y}_i$")
 plt.title("Prices vs Predicted prices: $Y_i$ vs $\hat{Y}_i$")
 plt.show()
 
-#### There should be linear straight line. But we can see that actual values are quite far apart from the predicted values which is not so good.
+#### There should be linear straight line. But we can see that actual values are quite far apart from the predicted values.
 
 ## --------------- Simple Linear Regression with all the features selected from RandomForest Feature Selection ---------
 
@@ -173,5 +175,3 @@ print('#', 50 * "-")
 
 print(
     ' Determination Coefficent values for our kind of social science data with 0.35 R2 value and score 0.35 and MSE: 0.62 can be considered as good')
-
-

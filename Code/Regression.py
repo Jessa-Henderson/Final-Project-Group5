@@ -106,7 +106,7 @@ plt.ylabel("Predicted prices: $\hat{Y}_i$")
 plt.title("Prices vs Predicted prices: $Y_i$ vs $\hat{Y}_i$")
 plt.show()
 
-#### There should be linear straight line. But we can see that actual values are quite far apart from the predicted values which is not so good.
+#### There should be linear straight line. But we can see that actual values are quite far apart from the predicted values.
 
 ## --------------- Simple Linear Regression with all the features selected from RandomForest Feature Selection ---------
 

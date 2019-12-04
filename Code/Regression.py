@@ -157,6 +157,7 @@ plt.show()
 # ### The plot is almost same as before.
 # ### We can see that there is no such linear line so the model is not fitting 100%. But for our kind of
 # project where we have social science data, having user described information we can consider it as good.
+#### scatter plot should create a linear line. As the model does not fit 100%, the scatter plot is not creating a linear line
 
 # In[15]:
 
